@@ -13202,7 +13202,7 @@ a.anchor-link {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Logistic-Function">Logistic Function<a class="anchor-link" href="#Logistic-Function">&#182;</a></h2>$$f(x) = \frac{1}{1 + exp(-x)}$$
+<h2 id="Logistic-Function">Logistic Function<a class="anchor-link" href="#Logistic-Function">&#182;</a></h2>$$f(x) = \frac{1}{1 + \exp(-x)}$$
 </div>
 </div>
 </div></section><section>
@@ -13250,6 +13250,48 @@ a.anchor-link {
 <h2 id="Multivariate-Normal-Distribution">Multivariate Normal Distribution<a class="anchor-link" href="#Multivariate-Normal-Distribution">&#182;</a></h2>$$ \mathcal{N}(\mu, \Sigma) \sim \frac{1}{(2\pi)^\frac{d}{2}|\Sigma|^\frac{1}{2}} \exp\left(-\frac{1}{2} (x - \mu)^T \Sigma^{-1} (x - \mu)\right) $$$$\mathbb{E}[X] = \mu $$$$\Sigma_{i,j} = \mathbb{E}[(X_i - \mu_i)(X_j - \mu_j)] = \text{Cov}(X_i, X_j) $$
 </div>
 </div>
+</div></section><section>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Multivariate-Normal-with-Naive-Bayes-Assumption">Multivariate Normal with Naive Bayes Assumption<a class="anchor-link" href="#Multivariate-Normal-with-Naive-Bayes-Assumption">&#182;</a></h3><p>Under the naive bayes assumption (that is, assuming conditional independence of $X$ given $Y$), we know that the covariance matrix must be diagonal. This follows from the fact that $\mathbb{E}[X_iX_j] = \mathbb{E}[X_i]\mathbb{E}[X_j]$ when $X_i$ and $X_j$ are independent. In addition, a diagonal covariance matrix conveniently has a diagonal inverse.</p>
+<p style="text-align: center;">
+$
+\tilde{\Sigma} = 
+\begin{pmatrix}
+\sigma_1^2 & 0 & \cdots & 0\\
+0 & \sigma_2^2 & \cdots & 0\\
+\vdots & \cdots & \ddots & \vdots \\
+0 & 0 & \cdots & \sigma_d^2 \\
+\end{pmatrix}
+$
+$
+\tilde{\Sigma}^{-1} = 
+\begin{pmatrix}
+\frac{1}{\sigma_1^2} & 0 & \cdots & 0\\
+0 & \frac{1}{\sigma_2^2} & \cdots & 0\\
+\vdots & \cdots & \ddots & \vdots \\
+0 & 0 & \cdots & \frac{1}{\sigma_d^2} \\
+\end{pmatrix}
+$
+</p>
+</div>
+</div>
+</div></section><section>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Assuming a diagonal covariance matrix allows us to simplify the joint distribution represented by the multivariate normal $P(X_1, X_2, \cdots, X_d | Y)$ into the product of univariate normal distributions $\prod_{i=1}^d P(X_i | Y)$.</p>
+$$
+\begin{align}
+P(X_1, X_2, \cdots, X_d | Y) &amp;= \frac{1}{(2\pi)^\frac{d}{2}|\Sigma|^\frac{1}{2}} \exp\left(-\frac{1}{2} (x - \mu)^T \Sigma^{-1} (x - \mu)\right) \\
+                             &amp;= \frac{1}{(2\pi)^\frac{d}{2}(\sigma_1^2\sigma_2^2\cdots\sigma_d^2)^\frac{1}{2}} \exp\left(-\sum_{i=1}^d \frac{(x_i - \mu_i)^2}{2\sigma_i^2}\right) \\
+                             &amp;= \prod_{i=1}^d \frac{1}{\sigma_i \sqrt{2\pi}} \exp\left(-\frac{(x_i - \mu_i)^2}{2\sigma_i^2}\right) \\
+                             &amp;= \prod_{i=1}^d P(X_i | Y)
+\end{align}
+$$
+</div>
+</div>
 </div></section></section><section><section>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
@@ -13263,7 +13305,7 @@ $$
     &amp;= \frac{\exp\left(-\frac{1}{2} \left[ x_i^T\Sigma^{-1}x_i - 2\mu_1^T \Sigma^{-1}x_i + \mu_1^T \Sigma^{-1}\mu_1\right]\right)}{\exp\left(-\frac{1}{2} \left[ x_i^T\Sigma^{-1}x_i - 2\mu_0^T \Sigma^{-1}x_i + \mu_0^T \Sigma^{-1}\mu_0\right]\right)} \frac{\pi}{1 - \pi} \\
     &amp;= \exp\left(-\frac{1}{2} \left[- 2(\mu_1 - \mu_0)^T\Sigma^{-1}x_i + \mu_1^T \Sigma^{-1}\mu_1 - \mu_0 \Sigma^{-1}\mu_0\right] + \log \frac{\pi}{1 - \pi}\right) \\
     &amp;= \exp\left((\mu_1 - \mu_0)^T\Sigma^{-1}x_i - \frac{1}{2}\left[\mu_1^T \Sigma^{-1}\mu_1 - \mu_0 \Sigma^{-1}\mu_0\right] + \log \frac{\pi}{1 - \pi}\right) \\
-    &amp;= \exp(\beta^Tx_i + \beta_0)
+    &amp;= \exp(\beta x_i + \beta_0)
 \end{align}$$<p>where $\beta = (\mu_1 - \mu_0)^T\Sigma^{-1}$ and $\beta_0 = - \frac{1}{2}\left[\mu_1^T \Sigma^{-1}\mu_1 - \mu_0 \Sigma^{-1}\mu_0\right] + \log \frac{\pi}{1 - \pi} $.</p>
 
 </div>
@@ -13277,7 +13319,7 @@ $$
 \begin{align}
 \log \frac{P(y_i = 1 | x_i)}{P(y_i = 0 | x_i)}
     &amp;= (\mu_1 - \mu_0)^T\Sigma^{-1}x_i - \frac{1}{2}\left[\mu_1^T \Sigma^{-1}\mu_1 - \mu_0 \Sigma^{-1}\mu_0\right] + \log \frac{\pi}{1 - \pi} \\
-    &amp;= \beta^Tx_i + \beta_0
+    &amp;= \beta x_i + \beta_0
 \end{align}
 $$
 </div>
@@ -13293,7 +13335,7 @@ $$
                      &amp;= \frac{P(x_i | y_i = 1)P(y_i = 1)}{P(x_i | y_i = 1)P(y_i = 0) + P(x_i | y_i = 1)P(y_i = 1)} \\
                      &amp;= \frac{1}{1 + \dfrac{P(x_i | y_i = 0)}{P(x_i | y_i = 1)}\dfrac{P(y_i = 0)}{P(y_i = 1)}} \\
                      &amp;= \frac{1}{1 + \exp\left(-\left[(\mu_1 - \mu_0)^T\Sigma^{-1}x_i - \frac{1}{2}\left[\mu_1^T \Sigma^{-1}\mu_1 - \mu_0 \Sigma^{-1}\mu_0\right] + \log \frac{\pi}{1 - \pi}\right]\right)} \\
-                     &amp;= \frac{1}{1 + \exp(-\beta^Tx_i - \beta_0)} \\
+                     &amp;= \frac{1}{1 + \exp(-\beta x_i - \beta_0)} \\
 \end{align}
 $$</p>
 
@@ -13390,7 +13432,7 @@ $$</p>
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>&lt;matplotlib.colorbar.Colorbar at 0x115883790&gt;</pre>
+<pre>&lt;matplotlib.colorbar.Colorbar at 0x11922bb90&gt;</pre>
 </div>
 
 </div>
@@ -13431,10 +13473,10 @@ $$\log \frac{P(y=1|x)}{P(y=K|x)} = w_1^Tx \\
 <p>Use the fact that the probabilities sum to 1 to derive an expression for $P(y=K|x)$.</p>
 $$
 \begin{align}
-P(y=K|x) + \sum_k^{K-1} P(y=k|x) &amp;= 1 \\
-P(y=K|x) + P(y=K|x)\left[\sum_k^{K-1} \exp(w_k^Tx)\right] &amp;= 1 \\
-P(y=K|x)(1 + \sum_k^{K-1} \exp(w_k^Tx)) &amp;= 1 \\
-P(y=K|x) = \dfrac{1}{1 + \sum_k^{K-1} \exp(w_k^Tx)} \\
+P(y=K|x) + \sum_{k=1}^{K-1} P(y=k|x) &amp;= 1 \\
+P(y=K|x) + P(y=K|x)\left[\sum_{k=1}^{K-1} \exp(w_k^Tx)\right] &amp;= 1 \\
+P(y=K|x)(1 + \sum_{k=1}^{K-1} \exp(w_k^Tx)) &amp;= 1 \\
+P(y=K|x) = \dfrac{1}{1 + \sum_{k=1}^{K-1} \exp(w_k^Tx)} \\
 \end{align}
 $$
 </div>
@@ -13445,10 +13487,10 @@ $$
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Now, use the newly derived expression to solve for $P(y=k|x)$, for $k \in \{1,2,...,K-1\}$.</p>
 $$
-  P(y=1|x) = \frac{\exp(w_1^Tx)}{1 + \sum_k^{K-1} \exp(w_k^Tx)} \\
-  P(y=2|x) = \frac{\exp(w_2^Tx)}{1 + \sum_k^{K-1} \exp(w_k^Tx)}  \\
+  P(y=1|x) = \frac{\exp(w_1^Tx)}{1 + \sum_{k=1}^{K-1} \exp(w_k^Tx)} \\
+  P(y=2|x) = \frac{\exp(w_2^Tx)}{1 + \sum_{k=1}^{K-1} \exp(w_k^Tx)}  \\
         \vdots \\
-  P(y=K-1|x) = \frac{\exp(w_{K-1}^Tx)}{1 + \sum_k^{K-1} \exp(w_k^Tx)} $$
+  P(y=K-1|x) = \frac{\exp(w_{K-1}^Tx)}{1 + \sum_{k=1}^{K-1} \exp(w_k^Tx)} $$
 </div>
 </div>
 </div></section></section><section><section>
@@ -13504,7 +13546,7 @@ $$
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>&lt;matplotlib.collections.PathCollection at 0x115922650&gt;</pre>
+<pre>&lt;matplotlib.collections.PathCollection at 0x1192cb8d0&gt;</pre>
 </div>
 
 </div>
@@ -13587,7 +13629,7 @@ $$
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>&lt;matplotlib.legend.Legend at 0x1131cb5d0&gt;</pre>
+<pre>&lt;matplotlib.legend.Legend at 0x1192ec4d0&gt;</pre>
 </div>
 
 </div>
@@ -13646,7 +13688,7 @@ $$
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>[&lt;matplotlib.lines.Line2D at 0x1159ffad0&gt;]</pre>
+<pre>[&lt;matplotlib.lines.Line2D at 0x1193a9f50&gt;]</pre>
 </div>
 
 </div>
@@ -13709,7 +13751,7 @@ $$
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>[&lt;matplotlib.lines.Line2D at 0x115a62cd0&gt;]</pre>
+<pre>[&lt;matplotlib.lines.Line2D at 0x11940cc50&gt;]</pre>
 </div>
 
 </div>
@@ -13772,7 +13814,7 @@ $$
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>[&lt;matplotlib.lines.Line2D at 0x115adfb10&gt;]</pre>
+<pre>[&lt;matplotlib.lines.Line2D at 0x11947fa10&gt;]</pre>
 </div>
 
 </div>
@@ -13864,7 +13906,7 @@ $g(x)$ has three important properties.</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Choosing the best step size (at every step) is thus analogous to choosing the "most accurate" quadratic approximation of $f$. Notice that all of the displayed approximations are overestimates of $f$. Setting a much larger value of $\alpha$, however, would result in an huge underestimate. The intuition of backtracking line search follows precisely from this reasoning. We first set a large $\alpha$ such that the approximation is a huge underestimate of $f$. We then "backtrack" by decreasing $\alpha$ exponentially, stopping when we've found $\alpha$ corresponding to the largest underestimate of $f$, and taking a gradient step. Formally, this involves setting $\alpha = \alpha*\beta$ as long as  $f(x_t - \alpha*f'(x_t)) &gt; g(x_t - \alpha*f'(x_t))$ against  at every step $t$. For the set of hyperparameters $\alpha_0 = 0.9$, $\beta = 0.8$, we find that backtracking line search requires 3 iterations to find the largest underestimate.</p>
+<p>Choosing the best step size (at every step) is thus analogous to choosing the "most accurate" quadratic approximation of $f$. Notice that all of the previously displayed approximations are overestimates of $f$. Setting a much larger value of $\alpha$, however, would result in an huge underestimate. The intuition of backtracking line search follows precisely from this reasoning. We first set a large $\alpha$ such that the approximation is a huge underestimate of $f$. We then "backtrack" by decreasing $\alpha$ exponentially, stopping when we've found $\alpha$ corresponding to the smallest overestimate of $f$, and taking a gradient step. Formally, this involves setting $\alpha = \alpha*\beta$ as long as  $f(x_t - \alpha*f'(x_t)) &gt; g(x_t - \alpha*f'(x_t))$ against  at every step $t$. For the set of hyperparameters $\alpha_0 = 0.9$, $\beta = 0.8$, we find that backtracking line search requires 3 iterations to find the smallest overestimate. In some sense, this is approximately the largest step size you could take that is "safe", since it is an overstimate of the true objective value.</p>
 
 </div>
 </div>
@@ -13920,6 +13962,33 @@ $g(x)$ has three important properties.</p>
 </div>
 </div>
 
+</div></section></section><section><section>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Before we move on, we will first derive the expression for the minimum of the quadratic approximation used in the backtracking line search. Note again that the function $g(x)$ (<code>q_approx_f</code>) is for purely illustrative purposes. For backtracking line search, we only require its minimum, which can be computed with a much simpler expression. Simply plug in $x = x_t - \alpha f'(x_t)$ into $g(x)$ as follows.
+$$
+\begin{align}
+g(x_t - \alpha f'(x_t)) &amp;= f(x_t) + f'(x_t)(x_t - \alpha f'(x_t) - x_t) + \frac{1}{2\alpha}(x_t - \alpha f'(x_t) - x_t)^2 \\
+                        &amp;= f(x_t) + f'(x_t)(-\alpha f'(x_t)) + \frac{1}{2\alpha}(\alpha f'(x_t))^2 \\
+                        &amp;= f(x_t) - \alpha f'(x_t)^2 + \frac{\alpha}{2}f'(x_t)^2 \\
+                        &amp;= f(x_t) - \frac{\alpha}{2} f'(x_t)^2
+\end{align}
+$$
+Thus, backtracking line search compares $f(x_t - \alpha f'(x_t))$ against $f(x_t) - \frac{\alpha}{2} f'(x_t)^2$ and stops once the approximation exceeds the true value. Lastly, we typically multiply the second term by $c \in [0, 1]$ to use a flatter approximation, so one may see backtracking algorithms with the term $f(x_t) - c\frac{\alpha}{2} f'(x_t)^2$.</p>
+
+</div>
+</div>
+</div></section></section><section><section>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Finally, we show that backtracking line search converges quite quickly. Before we conclude, it should noted that this is a toy example that (a) has a closed form solution, and (b) can be minimized via gradient descent in a single step. We have set the hyperparameters in way that's meant to be illustrative, not optimally for this problem. We recommend that you try out the code with other functions, such as $f$ for $x \in [0, 1]$ (shown below), the logistic loss function centered at $p$ (which does not have a closed form solution) to see how it behaves in more realistic circumstances.</p>
+$$
+f(x) = p \log(x) + (1-p)\log(1-x)
+$$
+</div>
+</div>
 </div></section><section>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
@@ -13957,7 +14026,7 @@ $g(x)$ has three important properties.</p>
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>[&lt;matplotlib.lines.Line2D at 0x115c92fd0&gt;]</pre>
+<pre>[&lt;matplotlib.lines.Line2D at 0x119644310&gt;]</pre>
 </div>
 
 </div>
@@ -13977,19 +14046,6 @@ $g(x)$ has three important properties.</p>
 
 </div>
 
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span> 
-</pre></div>
-
-    </div>
 </div>
 </div>
 
